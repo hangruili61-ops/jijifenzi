@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>积极分子政治理论考试 · 复习系统</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--red:#c0392b;--red-deep:#922b21;--red-light:#f5cac3;--gold:#d4a017;--gold-light:#fef3cd;--bg:#faf8f5;--bg2:#f2ede6;--text:#2c1810;--text-mute:#7b6050;--border:#e0d5c5;--correct:#27ae60;--wrong:#e74c3c;--card:#ffffff;--shadow:0 2px 16px rgba(44,24,16,0.08);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+header{background:linear-gradient(135deg,var(--red-deep) 0%,var(--red) 60%,#e74c3c 100%);color:white;padding:24px 24px 20px;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(192,57,43,0.4);}
+.header-inner{max-width:900px;margin:0 auto;}
+.header-title{font-family:'Noto Serif SC',serif;font-size:21px;font-weight:700;letter-spacing:3px;margin-bottom:14px;}
+.header-title span{color:var(--gold);}
+.mode-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.mode-btn{padding:7px 20px;border-radius:20px;border:2px solid rgba(255,255,255,0.5);background:transparent;color:rgba(255,255,255,0.85);font-size:14px;font-family:inherit;cursor:pointer;transition:all 0.2s;font-weight:500;}
+.mode-btn.active{background:white;color:var(--red);border-color:white;font-weight:700;}
+.mode-btn:hover:not(.active){background:rgba(255,255,255,0.15);color:white;}
+.tab-row{display:flex;gap:0;border-bottom:2px solid var(--border);background:var(--card);position:sticky;top:108px;z-index:90;overflow-x:auto;}
+.tab-btn{padding:14px 20px;border:none;background:transparent;color:var(--text-mute);font-size:14px;font-family:inherit;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s;font-weight:500;}
+.tab-btn.active{color:var(--red);border-bottom-color:var(--red);font-weight:700;}
+.tab-btn:hover:not(.active){color:var(--text);background:var(--bg2);}
+main{max-width:900px;margin:0 auto;padding:24px 16px 60px;}
+.section-header{display:flex;align-items:center;gap:10px;margin:32px 0 16px;}
+.section-badge{background:var(--red);color:white;font-family:'Noto Serif SC',serif;font-size:13px;font-weight:700;padding:4px 14px;border-radius:4px;letter-spacing:2px;}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 22px;margin-bottom:14px;box-shadow:var(--shadow);transition:box-shadow 0.2s;}
+.q-card:hover{box-shadow:0 4px 24px rgba(44,24,16,0.12);}
+.q-num{display:inline-block;background:var(--red);color:white;font-size:12px;font-weight:700;padding:2px 9px;border-radius:4px;margin-bottom:10px;letter-spacing:1px;}
+.q-text{font-size:15px;line-height:1.8;color:var(--text);margin-bottom:14px;font-weight:500;}
+.options{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.opt-label{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:8px;border:1.5px solid var(--border);cursor:pointer;transition:all 0.18s;font-size:14px;line-height:1.6;color:var(--text);}
+.opt-label:hover{border-color:var(--red);background:#fff5f5;}
+.opt-label input{margin-top:3px;accent-color:var(--red);flex-shrink:0;}
+.opt-label.correct{border-color:var(--correct);background:#eafaf1;}
+.opt-label.wrong{border-color:var(--wrong);background:#fdf2f2;}
+.opt-key{font-weight:700;color:var(--red);flex-shrink:0;}
+.answer-box{background:var(--gold-light);border-left:4px solid var(--gold);border-radius:0 8px 8px 0;padding:12px 14px;margin-top:8px;font-size:14px;line-height:1.8;}
+.answer-box.hidden{display:none;}
+.answer-label{font-weight:700;color:var(--red-deep);margin-bottom:4px;font-size:13px;}
+.answer-text{color:var(--text);}
+.analysis-text{color:var(--text-mute);margin-top:4px;font-size:13px;}
+.toggle-answer-btn{display:inline-block;margin-top:8px;padding:5px 14px;border-radius:5px;border:1.5px solid var(--gold);background:white;color:var(--gold);font-size:13px;cursor:pointer;font-family:inherit;transition:all 0.2s;}
+.toggle-answer-btn:hover{background:var(--gold);color:white;}
+.tf-options{display:flex;gap:12px;margin-bottom:12px;}
+.tf-btn{padding:8px 24px;border-radius:6px;border:1.5px solid var(--border);background:white;font-size:14px;cursor:pointer;font-family:inherit;font-weight:500;transition:all 0.18s;}
+.tf-btn:hover{border-color:var(--red);background:#fff5f5;}
+.tf-btn.selected-t{border-color:var(--correct);background:#eafaf1;color:var(--correct);font-weight:700;}
+.tf-btn.selected-f{border-color:var(--wrong);background:#fdf2f2;color:var(--wrong);font-weight:700;}
+.tf-btn.correct{border-color:var(--correct);background:#eafaf1;}
+.tf-btn.wrong-sel{border-color:var(--wrong);background:#fdf2f2;}
+.fill-input{width:100%;padding:10px 14px;border-radius:8px;border:1.5px solid var(--border);font-size:14px;font-family:inherit;color:var(--text);outline:none;margin-bottom:8px;transition:border-color 0.2s;resize:vertical;}
+.fill-input:focus{border-color:var(--red);}
+.result-mark{display:inline-block;font-size:18px;margin-right:6px;}
+.submit-section{display:flex;justify-content:center;margin:32px 0 16px;}
+.submit-btn{background:var(--red);color:white;border:none;padding:14px 48px;border-radius:8px;font-size:16px;font-family:'Noto Serif SC',serif;font-weight:700;cursor:pointer;letter-spacing:2px;box-shadow:0 4px 16px rgba(192,57,43,0.35);transition:all 0.2s;}
+.submit-btn:hover{background:var(--red-deep);transform:translateY(-1px);}
+.score-card{background:linear-gradient(135deg,var(--red-deep),var(--red));color:white;border-radius:14px;padding:28px;text-align:center;margin:24px 0;box-shadow:0 8px 32px rgba(192,57,43,0.3);display:none;}
+.score-card.show{display:block;}
+.score-num{font-family:'Noto Serif SC',serif;font-size:56px;font-weight:700;color:var(--gold);line-height:1;}
+.score-label{font-size:16px;margin-top:6px;opacity:0.9;}
+.score-detail{font-size:13px;margin-top:12px;opacity:0.75;}
+.progress-bar{background:rgba(255,255,255,0.2);border-radius:4px;height:6px;margin-top:16px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--gold);border-radius:4px;transition:width 0.6s ease;}
+body.mode-study .answer-box{display:block !important;}
+body.mode-study .toggle-answer-btn{display:none !important;}
+body.mode-study .submit-section{display:none !important;}
+body.mode-study .score-card{display:none !important;}
+body.mode-test .answer-box.hidden{display:none !important;}
+body.mode-test .toggle-answer-btn{display:none !important;}
+body.mode-test .toggle-answer-btn.fill-toggle{display:inline-block !important;}
+.q-card.answered-correct{border-color:var(--correct);}
+.q-card.answered-wrong{border-color:var(--wrong);}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+@media (max-width:600px){.header-title{font-size:17px;}.mode-btn{padding:6px 14px;font-size:13px;}.tab-btn{padding:10px 14px;font-size:13px;}.q-text{font-size:14px;}.opt-label{font-size:13px;}}
+</style>
+</head>
+<body class="mode-study">
+<header>
+<div class="header-inner">
+<div class="header-title">⭐ 积极分子政治理论 <span>模拟题</span> 复习系统</div>
+<div class="mode-bar">
+<button class="mode-btn active" id="btnStudy" onclick="setMode('study')">📖 背诵模式</button>
+<button class="mode-btn" id="btnTest" onclick="setMode('test')">✏️ 检测模式</button>
+</div>
+</div>
+</header>
+<div class="tab-row" id="tabRow">
+<button class="tab-btn active" onclick="switchExam(0)">模拟题（一）</button>
+<button class="tab-btn" onclick="switchExam(1)">模拟题（二）</button>
+<button class="tab-btn" onclick="switchExam(2)">模拟题（三）</button>
+<button class="tab-btn" onclick="switchExam(3)">模拟题（四）</button>
+</div>
+<main id="mainContent"></main>
+<script id="exam-data" type="application/json">[{"title": "模拟题（一）", "sections": [{"type": "single", "title": "单选题", "questions": [{"q": "党的二十届四中全会听取和讨论了习近平受中央政治局委托所作的工作报告,审议通过了（　　）。", "opts": ["《中共中央关于制定国民经济和社会发展第十四个五年规划的建议》", "《中共中央关于制定国民经济和社会发展第十五个五年规划的建议》", "《中共中央关于制定国民经济和社会发展第十六个五年规划的建议》"], "ans": 1, "analysis": "党的二十届四中全会（面向未来五年的发展节点）审议通过的是关于“十五五”规划（2026-2030年）的建议。"}, {"q": "党的二十届四中全会指出,实现社会主义现代化是一个（　　）的历史过程,需要不懈努力、接续奋斗。", "opts": ["阶梯式递进、不断发展进步", "平稳推进、匀速上升", "螺旋式上升、循环往复"], "ans": 0, "analysis": "社会主义现代化建设遵循客观规律，是一个阶梯式递进、不断发展进步的历史过程，强调了发展的阶段性与持续性的统一。"}, {"q": "中共中央关于制定国民经济和社会发展第十五个五年规划的建议指出，（　　）是中国式现代化的物质技术基础。", "opts": ["现代化产业体系", "绿色发展路径", "区域协同发展"], "ans": 0, "analysis": "现代化产业体系是支撑经济高质量发展的核心，也是中国式现代化的重要物质技术基础。"}, {"q": "中共中央关于制定国民经济和社会发展第十五个五年规划的建议指出,优化政府投资结构,提高（　　）政府投资比重,高质量推进国家重大战略实建设。", "opts": ["产业类", "基建类", "民生类"], "ans": 2, "analysis": "提高民生类政府投资比重体现了以人民为中心的发展思想，着力解决人民群众急难愁盼的问题。"}, {"q": "党的二十大报告指出,深化金融体制改革,建设（　　）制度,加强和完善现代金融监管,强化金融稳定保障体系。", "opts": ["现代商业银行", "现代政策性银行", "现代中央银行"], "ans": 2, "analysis": "建设现代中央银行制度是深化金融体制改革、宏观调控和防范系统性金融风险的核心要求。"}, {"q": "党的二十大报告指出,推动货物贸易优化升级,创新服务贸易发展机制,发展（　　）贸易,加快建设贸易强国。", "opts": ["多边", "自由", "数字"], "ans": 2, "analysis": "数字贸易是新时代国际贸易发展的新趋势和重要增长点。"}, {"q": "党的二十大报告指出,育人的根本在于（　　）。", "opts": ["立德", "立言", "立功"], "ans": 0, "analysis": "全面贯彻党的教育方针，必须落实“立德树人”的根本任务。"}, {"q": "党的二十大报告指出,促进区域协调发展,高标准、高质量建设雄安新区,推动（　　）地区双城经济圈建设。", "opts": ["京津", "沪杭", "成渝"], "ans": 2, "analysis": "成渝地区双城经济圈是促进区域协调发展的重大国家战略。"}, {"q": "党的二十大报告指出,坚持农业农村（　　）,坚持城乡（　　）,畅通城乡要素流动。", "opts": ["安全发展;同步发展", "优先发展;融合发展", "稳步发展;融合发展"], "ans": 1, "analysis": "全面推进乡村振兴必须坚持农业农村优先发展，坚持城乡融合发展。"}, {"q": "党的二十大报告指出,加快建设农业强国,扎实推动乡村产业、（　　）、组织振兴。", "opts": ["人才、教育、环境", "技术、文化、生态", "人才、文化、生态"], "ans": 2, "analysis": "乡村振兴战略的总要求包括产业振兴、人才振兴、文化振兴、生态振兴、组织振兴（即“五个振兴”）。"}, {"q": "党的二十大报告指出,树立（　　）,发展设施农业,构建多元化食物供给体系。", "opts": ["大食物观", "大农业观", "大产业观"], "ans": 0, "analysis": "“大食物观”要求向森林、草原、江河湖海要食物，向植物动物微生物要热量、要蛋白。"}, {"q": "党的二十大报告指出,把实施（　　）战略同深化供给侧结构性改革有机结合起来,增强国内大循环内生动力和可靠性。", "opts": ["扩大内需", "扩大外贸", "扩大出口"], "ans": 0, "analysis": "扩大内需是构建新发展格局的战略基点。"}, {"q": "党的二十大报告指出,推进以（　　）为核心的新型城镇化。", "opts": ["人", "房", "地"], "ans": 0, "analysis": "新型城镇化的核心是人的城镇化，强调以人为本，推动农业转移人口市民化。"}, {"q": "党的二十大报告指出,以海纳百川的宽阔胸襟（　　）人类一切优秀文明成果,推动建设更加美好的世界。", "opts": ["全盘接纳", "借鉴吸收", "完全摒弃"], "ans": 1, "analysis": "对待外来文化应坚持以我为主、为我所用，借鉴吸收其优秀成果。"}, {"q": "党的二十大报告指出,依托我国超大规模市场优势,以（　　）吸引全球资源要素,增强国内国际两个市场两种资源联动效应。", "opts": ["国内大市场", "国内大循环", "国际大市场"], "ans": 1, "analysis": "通过国内大循环的内生动力吸引全球资源，是构建新发展格局的重要手段。"}, {"q": "党的二十大报告指出,促进区域协调发展,推进以（　　）为主体的大中小城市和小城镇协调发展。", "opts": ["国家中心城市", "城市群", "省会城市"], "ans": 1, "analysis": "城市群是新型城镇化主体形态。"}, {"q": "党的二十大报告指出,全方位夯实粮食安全根基,牢牢守住（　　）亩耕地红线。", "opts": ["八亿", "十八亿", "二十八亿"], "ans": 1, "analysis": "十八亿亩耕地红线是我国保障国家粮食安全的底线。"}, {"q": "党的二十大报告指出,坚持以（　　）为中心发展教育,加快建设高质量教育体系。", "opts": ["国家", "人民", "党"], "ans": 1, "analysis": "教育事业必须坚持以人民为中心，办好人民满意的教育。"}, {"q": "党的二十大报告指出,坚持创新在我国现代化建设全局中的（　　）地位。", "opts": ["主导", "首要", "核心"], "ans": 2, "analysis": "创新是引领发展的第一动力，处于核心地位。"}, {"q": "党的二十大报告指出,坚决打赢（　　）攻坚战。", "opts": ["关键核心技术", "自主研发技术", "协同创新技术"], "ans": 0, "analysis": "打赢关键核心技术攻坚战是实现高水平科技自立自强的关键所在。"}, {"q": "党的二十大报告指出,加强（　　）主导的产学研深度融合,强化目标导向,提高科技成果转化和产业化水平。", "opts": ["政府", "企业", "市场"], "ans": 1, "analysis": "强化企业科技创新主体地位，发挥科技型骨干企业引领支撑作用。"}, {"q": "党的二十大报告指出,（　　）是社会主义民主政治的本质属性。", "opts": ["全过程人民民主", "基层民主", "人民当家作主"], "ans": 0, "analysis": "全过程人民民主是最广泛、最真实、最管用的民主。"}, {"q": "党的二十大报告指出,加强重点领域、（　　）、涉外领域立法。", "opts": ["新兴领域", "经济领域", "民生领域"], "ans": 0, "analysis": "强调要填补新兴领域的法律空白。"}, {"q": "党的二十大报告指出,（　　）建设是全面依法治国的重点任务和主体工程。", "opts": ["法治国家", "法治政府", "法治社会"], "ans": 1, "analysis": "法治政府建设是全面依法治国的主体工程。"}, {"q": "党的二十大通过的新修改的《中国共产党章程》规定,中国共产党坚持对人民解放军和其他人民武装力量的（　　）。", "opts": ["绝对领导", "思想引领", "政治指导"], "ans": 0, "analysis": "党对人民军队的绝对领导是建军之本、强军之魂。"}, {"q": "党的二十大通过的新修改的《中国共产党章程》规定，致力于（　　）的爱国者组成最广泛的爱国统一战线。", "opts": ["弘扬中国传统文化", "中华民族伟大复兴", "维护国家总体安全"], "ans": 1, "analysis": "“致力于中华民族伟大复兴”是统一战线的重要共识和目标。"}, {"q": "党的二十大通过的新修改的《中国共产党章程》规定，在党的纪律面前（　　）。", "opts": ["党员和群众一律平等", "不同级别的党员干部有所区别", "所有党员一律平等"], "ans": 2, "analysis": "在党的纪律面前所有党员一律平等。"}, {"q": "党的二十大通过的新修改的《中国共产党章程》规定,党的（　　）是党的全部工作和战斗力的基础。", "opts": ["基层组织", "干部", "党员"], "ans": 0, "analysis": "党的基层组织是党的全部工作和战斗力的基础。"}, {"q": "党的二十大通过的新修改的《中国共产党章程》规定，党的各级领导机关（除派出机关）都由（　　）产生。", "opts": ["任命", "选举", "指定"], "ans": 1, "analysis": "党的各级领导机关都由选举产生。"}, {"q": "《中国共产党纪律处分条例》规定，对于受到解散处理的党组织中不符合党员条件、经教育仍无转变的，予以（　　）。", "opts": ["劝退或者除名", "开除党籍", "留党察看"], "ans": 0, "analysis": "对不符合条件的党员经教育不改者予以劝退或除名。"}]}, {"type": "multi", "title": "多选题", "questions": [{"q": "党的二十届四中全会指出,“十五五”时期,我国经济（　　）,长期向好的支撑条件和基本趋势没有变。", "opts": ["基础稳", "优势多", "韧性强", "潜能大"], "ans": [0, 1, 2, 3], "analysis": "我国经济长期向好的基本面包括基础稳、优势多、韧性强、潜能大四大特征。"}, {"q": "提高党（　　）能力,把党的领导贯穿经济社会发展各方面全过程。", "opts": ["把方向", "谋大局", "定政策", "促改革"], "ans": [0, 1, 2, 3], "analysis": "提高党把方向、谋大局、定政策、促改革的能力。"}, {"q": "推动（　　）更好相适应,持续增强发展动力和社会活力。", "opts": ["生产关系和生产力", "上层建筑和经济基础", "国家治理和社会发展", "企业经营和行业竞争"], "ans": [0, 1, 2], "analysis": "全面深化改革推动生产关系与生产力、上层建筑与经济基础、国家治理与社会发展相适应。"}, {"q": "生态环境保护发生（　　）变化。", "opts": ["历史性", "转折性", "全局性", "跨越性"], "ans": [0, 1, 2], "analysis": "生态环境保护发生历史性、转折性、全局性变化。"}, {"q": "国家安全领导体制和（　　）不断完善。", "opts": ["管理体系", "法治体系", "战略体系", "政策体系"], "ans": [1, 2, 3], "analysis": "国家安全法治体系、战略体系、政策体系不断完善。"}, {"q": "有效遏制了（　　）。", "opts": ["境外敌对势力", "民族分裂势力", "宗教极端势力", "暴力恐怖势力"], "ans": [1, 2, 3], "analysis": "有效遏制了民族分裂势力、宗教极端势力、暴力恐怖势力（即“三股势力”）。"}, {"q": "党的（　　）显著增强。", "opts": ["政治领导力", "思想引领力", "群众组织力", "社会号召力"], "ans": [0, 1, 2, 3], "analysis": "四种力是衡量党组织政治功能和组织功能的重要标准。"}, {"q": "党组织对党员作出处分决定，下列说法正确的是（　　）。", "opts": ["应当实事求是地查清事实", "对于确属坚持错误意见和无理要求的人,要给以纪律处分", "处分决定所依据的事实材料和处分决定必须同本人见面", "本人对处分决定不服可以提出申诉,有关党组织必须负责处理或迅速转递"], "ans": [0, 2, 3], "analysis": "对于确属坚持错误意见和无理要求的人，要给以批评教育，故B错误。"}, {"q": "党的地方各级纪律检查委员会和基层纪律检查委员会在（　　）双重领导下进行工作。", "opts": ["同级党的委员会", "上级纪律检查委员会", "上级党的委员会", "党的中央纪律检查委员会"], "ans": [0, 1], "analysis": "地方和基层纪委受同级党委和上级纪委双重领导。"}, {"q": "各国各民族只有（　　），才能维护共同安全，消弭战争根源。", "opts": ["平等相待", "和睦相处", "守望相助", "缩小差异"], "ans": [0, 1, 2], "analysis": "平等相待、和睦相处、守望相助是维护国际和平安全的核心原则。"}]}, {"type": "tf", "title": "判断题", "questions": [{"q": "党的二十届四中全会指出,“十四五”时期我国发展历程极不寻常、极不平凡。", "ans": true, "analysis": "“十四五”时期面临复杂严峻的国内外环境，发展历程确实极不寻常、极不平凡。"}, {"q": "在发展中固安全,在安全中谋发展,以新安全格局保障新发展格局。", "ans": true, "analysis": "统筹发展和安全是治国理政的重大原则。"}, {"q": "优化产业布局,促进重点产业在国内有序转移。", "ans": true, "analysis": "有利于保持产业链供应链的安全稳定和区域协调发展。"}, {"q": "中国式现代化要靠科技现代化作支撑。", "ans": true, "analysis": "科技自立自强是国家强盛之基、安全之要。"}, {"q": "经过十八大以来在理论和实践上的创新突破,我们党成功推进和拓展了中国式现代化。", "ans": true, "analysis": "符合党的二十大报告对中国式现代化探索历程的科学总结。"}, {"q": "共同富裕是中国特色社会主义的本质要求,也是一个长期的历史过程。", "ans": true, "analysis": "共同富裕不能一蹴而就，必须循序渐进。"}, {"q": "到二○三五年完全建成法治国家、法治政府、法治社会。", "ans": false, "analysis": "错在“完全建成”，原文是“基本建成”法治国家、法治政府、法治社会。"}, {"q": "到二○三五年美丽中国目标完全实现。", "ans": false, "analysis": "错在“完全实现”，原文是“美丽中国目标基本实现”。"}, {"q": "中国人民和中华民族从近代以后的深重苦难走向伟大复兴的光明前景,从来就没有教科书,更没有现成答案。", "ans": true, "analysis": "强调了独立自主和走自己路的重要性。"}, {"q": "全面建设社会主义现代化国家,前途光明,任重道远。", "ans": true, "analysis": "出自二十大报告原文。"}, {"q": "坚持把国家和民族发展放在自己力量的基点上。", "ans": true, "analysis": "体现了独立自主、自力更生的原则。"}, {"q": "今天,我们比历史上任何时期都更接近、更有信心和能力实现中华民族伟大复兴的目标。", "ans": true, "analysis": "强调了机遇与挑战并存，需保持战略清醒。"}, {"q": "全面建设社会主义现代化国家,最艰巨最繁重的任务仍然在城市。", "ans": false, "analysis": "错。最艰巨最繁重的任务仍然在农村。"}, {"q": "保障进城落户农民合法土地权益,鼓励依法自愿无偿转让。", "ans": false, "analysis": "错。应为鼓励依法自愿“有偿”转让。"}, {"q": "巩固东部沿海地区开放先导地位,提高中西部和东北地区开放水平。", "ans": true, "analysis": "符合区域协调发展和全面开放新格局的要求。"}, {"q": "教育是国之大计、党之大计。", "ans": true, "analysis": "凸显了教育在现代化建设中的基础性、先导性、全局性地位。"}, {"q": "培养德智体全面发展的社会主义建设者和接班人。", "ans": false, "analysis": "错。应是德智体“美劳”全面发展。"}, {"q": "建设全民终身学习的学习型社会、创新型大国。", "ans": false, "analysis": "错。应为建设全民终身学习的学习型社会、“学习型”大国。"}, {"q": "培育创新文化,弘扬科学精神,涵养优良学风,营造创新氛围。", "ans": false, "analysis": "错。原文为弘扬“科学家精神”。"}, {"q": "全面提高人才自主培养质量,着力造就拔尖创新人才,聚天下英才而用之。", "ans": true, "analysis": "人才是第一资源。"}, {"q": "全面构建亲清政商关系,促进非公有制经济健康发展和非公有制经济人士健康发展。", "ans": true, "analysis": "“两个毫不动摇”和“两个健康”的体现。"}, {"q": "坚持人民主导地位,充分体现人民意志、保障人民权益。", "ans": false, "analysis": "错。应为坚持人民“主体”地位。"}, {"q": "完善协商民主体系,统筹推进政党、人大、政府、政协、人民团体、基层、社会组织协商。", "ans": true, "analysis": "这是全过程人民民主的重要实践形式。"}, {"q": "完善大统战工作格局,坚持大团结大联合。", "ans": true, "analysis": "统一战线是党克敌制胜、执政兴国的重要法宝。"}, {"q": "我国的社会主义建设,必须从我国的国情出发,以中国式现代化全面推进中华民族伟大复兴。", "ans": true, "analysis": "新党章加入了相应表述。"}, {"q": "发展更加广泛、更加充分、更加健全的全过程人民民主。", "ans": true, "analysis": "体现我国社会主义民主的本质。"}, {"q": "街道、乡、镇党的基层委员会和村、社区党组织,统一领导本地区基层各类组织和各项工作。", "ans": true, "analysis": "强化了党在基层治理中的领导核心作用。"}, {"q": "中国共产党人追求共产主义的最高理想。", "ans": true, "analysis": "这是党的初心和最高纲领。"}, {"q": "必须坚持以经济建设为中心，要充分发挥人才作为第一资源的作用。", "ans": true, "analysis": "党在社会主义初级阶段基本路线的核心内容。"}, {"q": "在马克思主义哲学产生之前没有唯物史观和唯心史观的斗争。", "ans": true, "analysis": "马克思主义哲学创立了唯物史观，在此之前唯物主义者在历史观上也是唯心主义的。"}, {"q": "“仁者见仁,智者见智”,是对客观真理的否定。", "ans": false, "analysis": "认识具有主观性,但并未否认事物客观真理的存在。真理是客观的。"}, {"q": "中华民族伟大复兴势不可挡！人类和平与发展的崇高事业必将胜利！", "ans": true, "analysis": "展现了坚定的历史自信和维护和平的决心。"}, {"q": "《中国共产党纪律处分条例》适用于违犯党纪应当受到党纪责任追究的党员。", "ans": false, "analysis": "错。条例不仅适用于党员，也适用于“党组织”。"}, {"q": "不了解、不熟悉马克思主义基本原理,就不可能真正了解和掌握中国特色社会主义理论体系。", "ans": true, "analysis": "马克思主义基本原理是中国特色社会主义理论体系的理论渊源和根基。"}, {"q": "上级党组织对党员作出的处理决定,下级党组织认为有错误的,可以暂缓执行。", "ans": false, "analysis": "错。下级党组织必须严格执行上级决定。"}]}, {"type": "fill", "title": "填空题", "questions": [{"q": "中国共产党是____的先锋队,同时是____的先锋队,是____的领导核心,代表中国____的发展要求,代表中国____的前进方向,代表中国____的根本利益。", "ans": "中国工人阶级；中国人民和中华民族；中国特色社会主义事业；先进生产力；先进文化；最广大人民", "analysis": "两个先锋队、一个核心、三个代表。"}, {"q": "党的最高理想和最终目标是____。", "ans": "实现共产主义", "analysis": "《中国共产党章程》总纲规定。"}, {"q": "中国共产党以马克思列宁主义、____、邓小平理论、“三个代表”重要思想和科学发展观、____作为自己的行动指南。", "ans": "毛泽东思想；习近平新时代中国特色社会主义思想", "analysis": "党始终坚持的指导思想体系。"}]}]}, {"title": "模拟题（二）", "sections": [{"type": "single", "title": "单选题", "questions": [{"q": "“十五五”时期是基本实现社会主义现代化（　　）的关键时期。", "opts": ["夯实基础、全面发力", "攻坚突破、加速跃升", "收尾冲刺、全面收官"], "ans": 0, "analysis": "“十五五”时期距离2035年基本实现社会主义现代化还有十年，因此是“夯实基础、全面发力”的关键阶段。"}, {"q": "“十五五”时期经济社会发展，以（　　）为主题。", "opts": ["实现共同富裕", "深化改革开放", "推动高质量发展"], "ans": 2, "analysis": "高质量发展是首要任务。"}, {"q": "治国必先（　　），（　　）才能国强。", "opts": ["治党;治国", "治军;军兴", "治党;党兴"], "ans": 2, "analysis": "治国必先治党，党兴才能国强。"}, {"q": "以（　　）为重点扩大市场准入和开放领域。", "opts": ["制造业", "服务业", "加工业"], "ans": 1, "analysis": "扩大高水平对外开放的重点领域是服务业。"}, {"q": "（　　）是中国式现代化的必然要求。", "opts": ["坚持开放合作、互利共赢", "区域协调发展", "文化繁荣兴盛"], "ans": 0, "analysis": "中国式现代化不是封闭的，必然要求开放合作、互利共赢。"}, {"q": "十年来，党和国家事业（　　）。", "opts": ["取得革命性成就、发生革命性变革", "取得历史性成就、发生历史性变革", "取得实践性成就、发生实践性变革"], "ans": 1, "analysis": "新时代十年的伟大变革被称为“历史性成就、历史性变革”。"}, {"q": "不断丰富和发展（　　）。", "opts": ["人类文明新形态", "人类文明新模式", "世界文明新态势"], "ans": 0, "analysis": "中国式现代化创造了“人类文明新形态”。"}, {"q": "实现了马克思主义（　　）新的飞跃。", "opts": ["中国化时代化", "中国化历史化", "民族化时代化"], "ans": 0, "analysis": "习近平新时代中国特色社会主义思想实现了马克思主义中国化时代化新的飞跃。"}, {"q": "中国特色社会主义最本质的特征是（　　）。", "opts": ["社会主义制度", "中国共产党领导", "人民代表大会制度"], "ans": 1, "analysis": "中国特色社会主义最本质的特征是中国共产党领导。"}, {"q": "中国特色社会主义制度的最大优势是（　　）。", "opts": ["统一战线", "人民当家做主", "中国共产党领导"], "ans": 2, "analysis": "中国共产党领导是“最大优势”。"}, {"q": "（　　）是最高政治领导力量。", "opts": ["中国共产党", "中央军事委员会", "全国人民代表大会"], "ans": 0, "analysis": "中国共产党是最高政治领导力量。"}, {"q": "号召全党学习和践行（　　）。", "opts": ["伟大革命精神", "伟大建党精神", "伟大改革精神"], "ans": 1, "analysis": "建党百年提出了“伟大建党精神”。"}, {"q": "坚持（　　）不动摇，最大限度保护了人民生命安全和身体健康。", "opts": ["相对稳定", "绝对清零", "动态清零"], "ans": 2, "analysis": "党中央作出了坚持“动态清零”不动摇的科学决策。"}, {"q": "依照宪法和基本法有效实施对特别行政区的（　　）。", "opts": ["全面管治权", "全面管理权", "全面管辖权"], "ans": 0, "analysis": "中央对特别行政区拥有“全面管治权”。"}, {"q": "我国社会主要矛盾是人民日益增长的美好生活需要和（　　）的发展之间的矛盾。", "opts": ["不平衡不充分", "不协调不平衡", "不充分不一致"], "ans": 0, "analysis": "新时代我国社会主要矛盾。"}, {"q": "实现了（　　）这个中华民族的千年梦想。", "opts": ["温饱", "小康", "复兴"], "ans": 1, "analysis": "全面建成了小康社会。"}, {"q": "历史性地解决了（　　）问题。", "opts": ["绝对贫困", "相对贫穷", "共同富裕"], "ans": 0, "analysis": "脱贫攻坚战的胜利标志着我们历史性地解决了“绝对贫困”问题。"}, {"q": "实施（　　）结构性改革。", "opts": ["需求端", "供给侧", "高效率"], "ans": 1, "analysis": "宏观经济调控的主线是实施供给侧结构性改革。"}, {"q": "进入（　　）国家行列。", "opts": ["技术型", "发展型", "创新型"], "ans": 2, "analysis": "成功进入“创新型”国家行列。"}, {"q": "把（　　）更好转化为国家治理效能。", "opts": ["社会治理方式", "集体治理智慧", "我国制度优势"], "ans": 2, "analysis": "把“我国制度优势”更好转化为国家治理效能。"}, {"q": "党找到了（　　）这一跳出治乱兴衰历史周期率的第二个答案。", "opts": ["人民监督", "自我革命", "民主执政"], "ans": 1, "analysis": "第二个答案是党的“自我革命”。"}, {"q": "坚持马克思主义在意识形态领域（　　）地位的根本制度。", "opts": ["指导", "主导", "主体"], "ans": 0, "analysis": "必须坚持马克思主义在意识形态领域的“指导”地位。"}, {"q": "推动构建（　　）。", "opts": ["新型国际关系", "新时代全球治理体系", "人类命运共同体"], "ans": 2, "analysis": "推动构建“人类命运共同体”。"}, {"q": "书写了（　　）两大奇迹新篇章。", "opts": ["经济平稳发展和政权长期稳定", "科技快速进步和人民生活幸福", "经济快速发展和社会长期稳定"], "ans": 2, "analysis": "“经济快速发展”和“社会长期稳定”两大奇迹。"}, {"q": "是指党员缺乏革命意志，（　　），不符合党员条件，经教育仍无转变的，党组织应当劝其退党。", "opts": ["不履行党员义务", "不行使党员权利", "不参加党的组织生活"], "ans": 0, "analysis": "“不履行党员义务”是衡量党员是否需要劝退的核心标准之一。"}, {"q": "实行行政领导人负责制的事业单位中党的基层组织，发挥（　　）作用。", "opts": ["战斗堡垒", "政治核心", "旗帜引领"], "ans": 0, "analysis": "现行党章统称基层党组织发挥战斗堡垒作用。"}, {"q": "对于严重违纪、严重触犯刑律的党员，必须给予（　　）的纪律处分。", "opts": ["开除党籍", "留党察看", "撤销党内职务"], "ans": 0, "analysis": "必须“开除党籍”。"}, {"q": "党的各级委员会实行（　　）的制度。", "opts": ["集体领导", "个人分工负责", "集体领导和个人分工负责相结合"], "ans": 2, "analysis": "实行集体领导和个人分工负责相结合的制度。"}, {"q": "凡属重大问题，按照集体领导、民主集中、个别酝酿、（　　）的原则。", "opts": ["会议决定", "书记个人决定", "常委会决定"], "ans": 0, "analysis": "“集体领导、民主集中、个别酝酿、会议决定”十六字方针。"}]}, {"type": "multi", "title": "多选题", "questions": [{"q": "“十五五”时期，（　　）优势更加彰显。", "opts": ["中国特色社会主义制度", "超大规模市场优势", "完整产业体系", "丰富人才资源"], "ans": [0, 1, 2, 3], "analysis": "制度优势、市场优势、产业体系优势和人才资源优势。"}, {"q": "建设现代化产业体系，坚持（　　）方向。", "opts": ["智能化", "绿色化", "融合化", "规模化"], "ans": [0, 1, 2], "analysis": "现代产业体系升级聚焦于智能化、绿色化、融合化发展。"}, {"q": "构建（　　）的市场体系。", "opts": ["统一", "开放", "竞争", "有序"], "ans": [0, 1, 2, 3], "analysis": "“统一、开放、竞争、有序”的现代市场体系。"}, {"q": "促进制造业数智化转型发展（　　）。", "opts": ["传统制造", "智能制造", "绿色制造", "服务型制造"], "ans": [1, 2, 3], "analysis": "智能制造、绿色制造和服务型制造。"}, {"q": "坚持制度治党、依规治党，（　　）。", "opts": ["以党章为根本", "以民主集中制为核心", "完善党内法规制度体系", "增强党内法规权威性和执行力"], "ans": [0, 1, 2, 3], "analysis": "全面涵盖了制度治党、依规治党的核心要素。"}, {"q": "着力增强（　　）能力。", "opts": ["防风险", "迎挑战", "抗打压", "善总结"], "ans": [0, 1, 2], "analysis": "防风险、迎挑战、抗打压能力。"}, {"q": "做到（　　）。", "opts": ["平常时候看得出来", "关键时刻站得出来", "危难关头豁得出来", "重大事件顶得上来"], "ans": [0, 1, 2], "analysis": "对优秀党员干部先锋模范作用的生动画像。"}, {"q": "根据党章规定，下列说法正确的是（　　）。", "opts": ["对同级党的委员会处理案件的决定有不同意见,可以请求上一级纪委复查", "纪律检查委员会每届任期和同级党的委员会相同", "处理特别重要或复杂的案件向同级党的委员会报告", "只有市级和市级以上党委和纪委有权直接决定给党员以纪律处分"], "ans": [0, 1, 2], "analysis": "D错。县级和县级以上党委和纪委有权直接决定。"}, {"q": "促进（　　）深度融合，打造数字产业集群。", "opts": ["数字经济", "实体经济", "金融经济", "互联网经济"], "ans": [0, 1], "analysis": "促进“数字经济”和“实体经济”深度融合。"}, {"q": "党的三大历史任务是（　　）。", "opts": ["实现民族复兴", "推进现代化建设", "完成祖国统一", "维护世界和平与促进共同发展"], "ans": [1, 2, 3], "analysis": "推进现代化建设、完成祖国统一、维护世界和平与促进共同发展。"}]}, {"type": "tf", "title": "判断题", "questions": [{"q": "“十五五”时期在基本实现社会主义现代化进程中具有承前启后的重要地位。", "ans": true, "analysis": "承接“十四五”并直通2035年目标。"}, {"q": "要健全国家安全体系,加强重点领域国家安全能力建设。", "ans": true, "analysis": "符合推进国家安全体系和能力现代化的要求。"}, {"q": "统筹国家战略科技力量建设,增强体系化攻关能力。", "ans": true, "analysis": "科技自立自强需要新型举国体制。"}, {"q": "农业农村现代化关系中国式现代化全局和成色。", "ans": true, "analysis": "民族要复兴，乡村必振兴。"}, {"q": "提高资本要素在初次分配中的比重。", "ans": false, "analysis": "错。应为提高“劳动报酬”在初次分配中的比重。"}, {"q": "以钉钉子精神纠治“四风”，刹住了一些长期没有刹住的歪风。", "ans": true, "analysis": "对新时代十年作风建设成就的总结。"}, {"q": "社会主义法治国家建设深入推进,全面依法治国总体格局基本形成。", "ans": true, "analysis": "符合法治中国建设的阶段性总结。"}, {"q": "深入实施种业振兴行动,确保中国人的饭碗牢牢端在自己手中。", "ans": true, "analysis": "强调粮食安全的底线思维。"}, {"q": "坚决把全军工作重心归正到实战练兵上来。", "ans": false, "analysis": "错。原文为：归正到“备战打仗”上来。"}, {"q": "以党的制度建设统领党的建设各项工作。", "ans": false, "analysis": "错。是以党的“政治建设”统领。"}, {"q": "解决台湾问题、实现祖国完全统一,是实现中华民族伟大复兴的必然要求。", "ans": true, "analysis": "台湾问题事关国家核心利益。"}, {"q": "提供更多更好的中国智慧、中国方案、中国答案。", "ans": false, "analysis": "错。应为中国“力量”。"}, {"q": "深入群众、深入基层,着力解决好人民群众急难愁盼问题。", "ans": true, "analysis": "以人民为中心的发展思想。"}, {"q": "新时代的伟大成就是党和人民一道拼出来、干出来、奋斗出来的。", "ans": true, "analysis": "强调人民群众的历史主体地位。"}, {"q": "中国式现代化为人类实现现代化提供了新的模式。", "ans": false, "analysis": "错。提供了新的“选择”，不是单一“模式”。"}, {"q": "在坚持和发展中国特色社会主义的历史进程中始终成为坚强领导核心。", "ans": true, "analysis": "对党的伟大社会革命中地位的概括。"}, {"q": "马克思主义是我们立党立国、兴党兴国的根本指导思想。", "ans": true, "analysis": "党在思想理论上的根本遵循。"}, {"q": "坚持以马克思主义为指导,要运用其科学的世界观和方法论解决中国的问题。", "ans": true, "analysis": "做到活学活用。"}, {"q": "只有植根本国、本民族历史文化沃土,马克思主义真理之树才能根深叶茂。", "ans": true, "analysis": "“第二个结合”。"}, {"q": "到二○三五年,根本实现国防和军队现代化。", "ans": false, "analysis": "错在“根本实现”。规划目标是“基本实现”。"}, {"q": "对马克思主义的坚定信仰、对中国特色社会主义的坚定信念。表述正确。", "ans": true, "analysis": "对马克思主义“信仰”、对中国特色社会主义“信念”。"}, {"q": "问题是时代的声音,回答问题是理论的根本任务。", "ans": false, "analysis": "错。回答“并指导解决”问题是理论的根本任务。"}, {"q": "中国共产党也是为人类谋进步、为世界谋大同的党。", "ans": true, "analysis": "党胸怀天下的视野和担当。"}, {"q": "物质富足是社会主义现代化的根本要求。", "ans": false, "analysis": "错。物质富足、精神富有才是根本要求。"}, {"q": "物质贫困不是社会主义,精神贫乏也不是社会主义。", "ans": true, "analysis": "两个文明协调发展。"}, {"q": "坚持把“制度”挺在前面。", "ans": false, "analysis": "错。是把“纪律”挺在前面。"}, {"q": "中国共产党党员是中国工人阶级的有马克思主义觉悟的先锋战士。", "ans": false, "analysis": "错。应为有“共产主义觉悟”。"}, {"q": "预备党员必须面向全体党员进行入党宣誓。", "ans": false, "analysis": "错。必须面向“党旗”宣誓。"}, {"q": "机关党组织领导本单位的业务工作。", "ans": false, "analysis": "错。机关党组织不领导本单位的业务工作。"}, {"q": "党的各级组织要按规定实行党务公开。", "ans": true, "analysis": "发扬党内民主。"}, {"q": "党员二人以上共同故意违纪的,对为首者应从重处分。", "ans": true, "analysis": "共同违纪从严惩处。"}, {"q": "党员有贪污贿赂、滥用职权等违法涉嫌犯罪行为的,应当给予相应党纪处分。", "ans": true, "analysis": "严重违纪违法行为必须给予重处分。"}, {"q": "以提供场地方式支持反对党的重大方针政策的论坛活动,情节严重的,给予开除党籍处分。", "ans": true, "analysis": "严重违反党的政治纪律。"}, {"q": "对信仰宗教的党员,应当加强思想教育,要求其限期改正。", "ans": true, "analysis": "共产党员必须是无神论者。"}, {"q": "对批评、检举、控告进行阻挠、压制等,对直接责任者和领导责任者给予警告直至开除党籍处分。", "ans": true, "analysis": "侵犯党员权利、违反纪律的严惩。"}]}, {"type": "fill", "title": "填空题", "questions": [{"q": "入党誓词最后一句：随时准备为党和人民牺牲一切，____。", "ans": "永不叛党", "analysis": "入党誓词原文最后一句。"}, {"q": "全党同志要坚定____自信、____自信、____自信、____自信。", "ans": "道路、理论、制度、文化", "analysis": "“四个自信”。"}, {"q": "为实现____（三大历史任务）而奋斗。", "ans": "推进现代化建设、完成祖国统一、维护世界和平与促进共同发展", "analysis": "党在新时代的三大历史任务。"}]}]}, {"title": "模拟题（三）", "sections": [{"type": "single", "title": "单选题", "questions": [{"q": "“十五五”时期经济社会发展，以（　　）为根本动力。", "opts": ["扩大内需", "对外开放", "改革创新"], "ans": 2, "analysis": "改革创新是根本动力。"}, {"q": "“十五五”时期经济社会发展，以（　　）为根本保障。", "opts": ["统筹发展和安全", "全面从严治党", "科技自立自强"], "ans": 1, "analysis": "全面从严治党是根本政治保障。"}, {"q": "（　　）是中国式现代化的内在要求。", "opts": ["坚持开放合作、互利共赢", "区域协调发展", "文化繁荣兴盛"], "ans": 1, "analysis": "区域协调发展是中国式现代化的内在要求。"}, {"q": "（　　）是中国式现代化的重要标志。", "opts": ["发展新质生产力", "文化繁荣兴盛", "区域协调发展"], "ans": 1, "analysis": "文化繁荣兴盛是精神内核的重要标志。"}, {"q": "建设好（　　）。", "opts": ["基层执法联系点", "基层立法联系点", "基层立法联络点"], "ans": 1, "analysis": "基层立法联系点。"}, {"q": "完善（　　）制度，拓宽基层各类群体参与基层治理渠道。", "opts": ["党务公开", "办事公开", "基层民主"], "ans": 1, "analysis": "完善办事公开制度。"}, {"q": "健全以（　　）为基本形式的企事业单位民主管理制度。", "opts": ["职工代表大会", "工人联合大会", "人民当家作主"], "ans": 0, "analysis": "职工代表大会制度。"}, {"q": "（　　）是最大的政治，（　　）是凝聚人心、汇聚力量的强大法宝。", "opts": ["人心;民主集中", "民心;统一战线", "人心;统一战线"], "ans": 2, "analysis": "“人心是最大的政治，统一战线是凝聚人心、汇聚力量的强大法宝。”"}, {"q": "强化共同奋斗的（　　）引领。", "opts": ["政治", "思想", "组织"], "ans": 1, "analysis": "思想引领。"}, {"q": "加强（　　）建设。", "opts": ["家庭家规家风", "家规家教家风", "家庭家教家风"], "ans": 2, "analysis": "“家庭家教家风”建设。"}, {"q": "（　　）是社会主义的生命。", "opts": ["人民民主", "解放生产力", "共同富裕"], "ans": 0, "analysis": "人民民主是社会主义的生命。"}, {"q": "（　　）是维护社会公平正义的最后一道防线。", "opts": ["严格执法", "公正司法", "司法救济"], "ans": 1, "analysis": "司法是社会公平正义的最后一道防线。"}, {"q": "全面落实重大决策（　　）制度。", "opts": ["执行", "监督", "程序"], "ans": 2, "analysis": "重大决策程序制度。"}, {"q": "（　　）是构筑法治国家的基础。", "opts": ["法治政府", "法律体系", "法治社会"], "ans": 2, "analysis": "法治社会是构筑法治国家的基础。"}, {"q": "（　　）工作是为国家立心、为民族立魂的工作。", "opts": ["思想发动", "宣传引导", "意识形态"], "ans": 2, "analysis": "意识形态工作。"}, {"q": "增强（　　），扎实推进共同富裕。", "opts": ["综合性和可及性", "均衡性和可期性", "均衡性和可及性"], "ans": 2, "analysis": "均衡性和可及性。"}, {"q": "（　　）制度是促进共同富裕的基础性制度。", "opts": ["救济帮扶", "分配", "社会保障"], "ans": 1, "analysis": "分配制度是促进共同富裕的基础性制度。"}, {"q": "弘扬以（　　）为源头的中国共产党人精神谱系。", "opts": ["延安精神", "井冈山精神", "伟大建党精神"], "ans": 2, "analysis": "伟大建党精神是中国共产党的精神之源。"}, {"q": "用（　　）铸魂育人。", "opts": ["中华传统文化", "社会主义核心价值观", "社会主义价值体系"], "ans": 1, "analysis": "社会主义核心价值观铸魂育人。"}, {"q": "坚持以（　　）为中心的创作导向。", "opts": ["人民", "效益", "市场"], "ans": 0, "analysis": "以人民为中心的创作导向。"}, {"q": "加大（　　）保护力度。", "opts": ["文物", "文化遗产", "文物和文化遗产"], "ans": 2, "analysis": "文物和文化遗产并列强调。"}, {"q": "要提升生态系统（　　）。", "opts": ["多样性、稳定性、发展性", "多样性、稳固性、持续性", "多样性、稳定性、持续性"], "ans": 2, "analysis": "多样性、稳定性、持续性。"}, {"q": "要发展（　　）养老保险体系。", "opts": ["多层次、多支柱", "多层次、多渠道", "多渠道、多支柱"], "ans": 0, "analysis": "“多层次、多支柱”养老保险体系。"}, {"q": "要扩大（　　）覆盖面。", "opts": ["社会保险", "商业保险", "强制保险"], "ans": 0, "analysis": "扩大“社会保险”覆盖面。"}, {"q": "中国共产党是中国工人阶级的先锋队，同时是（　　）的先锋队。", "opts": ["中国人民", "中华民族", "中国人民和中华民族"], "ans": 2, "analysis": "“两个先锋队”。"}, {"q": "党的（　　）是一切从实际出发，理论联系实际，实事求是。", "opts": ["政治路线", "组织路线", "思想路线"], "ans": 2, "analysis": "实事求是思想路线。"}, {"q": "统一战线中，社会主义事业的（　　）。", "opts": ["建设者", "经营者", "领导者"], "ans": 0, "analysis": "劳动者、建设者、爱国者。"}, {"q": "党的基层委员会、总支部委员会、支部委员会每届任期（　　）。", "opts": ["三年", "二年或三年", "三年至五年"], "ans": 2, "analysis": "每届任期三年至五年。"}, {"q": "可以申请入党的年龄为年满（　　）。", "opts": ["16岁", "18岁", "20岁"], "ans": 1, "analysis": "年满十八岁可以申请加入。"}, {"q": "党员违纪行为取得的利益，应当予以（　　）。", "opts": ["予以接收", "收缴或者返还有关单位、个人", "收缴或者责令退赔"], "ans": 2, "analysis": "收缴或者责令退赔。"}]}, {"type": "multi", "title": "多选题", "questions": [{"q": "发挥（　　）叠加效应，优化重大生产力布局。", "opts": ["区域协调发展战略", "区域重大战略", "主体功能区战略", "新型城镇化战略"], "ans": [0, 1, 2, 3], "analysis": "系统性战略矩阵。"}, {"q": "加强科技（　　）建设。", "opts": ["法治", "伦理", "诚信", "安全"], "ans": [0, 1, 2, 3], "analysis": "法治、伦理、诚信、安全建设。"}, {"q": "建设（　　）的全国一体化数据市场。", "opts": ["开放", "共享", "安全", "封闭"], "ans": [0, 1, 2], "analysis": "开放、共享、安全。"}, {"q": "加强（　　）。", "opts": ["实践锻炼", "能力培养", "专业训练", "素质提升"], "ans": [0, 2], "analysis": "实践锻炼和专业训练。"}, {"q": "增强干部（　　）本领。", "opts": ["推动高质量发展", "构建新发展格局", "服务群众", "防范化解风险"], "ans": [0, 2, 3], "analysis": "推动高质量发展、服务群众、防范化解风险本领。"}, {"q": "扑下身子（　　）。", "opts": ["干实事", "谋政绩", "谋实招", "求实效"], "ans": [0, 2, 3], "analysis": "干实事、谋实招、求实效。"}, {"q": "加强（　　）党的建设。", "opts": ["新经济组织", "新社会组织", "新就业群体"], "ans": [0, 1, 2], "analysis": "“两新组织”及新就业群体。"}, {"q": "党员义务包括（　　）。", "opts": ["增强“四个意识”、坚定“四个自信”、做到“两个维护”", "坚持党和人民的利益高于一切", "维护党的团结和统一", "密切联系群众,维护群众的正当利益"], "ans": [0, 1, 2, 3], "analysis": "党章第三条规定的党员义务。"}, {"q": "党员权利包括（　　）。", "opts": ["参加党的有关会议,阅读党的有关文件", "参加关于党的政策问题的讨论", "行使表决权、选举权,有被选举权", "向党的上级组织直至中央提出请求、申诉和控告"], "ans": [0, 1, 2, 3], "analysis": "党章第四条规定的党员权利。"}, {"q": "党的各级纪律检查委员会的主要任务是（　　）。", "opts": ["维护党的章程和其他党内法规", "检查党的路线、方针、政策和决议的执行情况", "协助党的委员会推进强党风建设和组织协调反腐败工作", "推动完善党和国家监督体系"], "ans": [0, 1, 2, 3], "analysis": "党章第四十六条。"}]}, {"type": "tf", "title": "判断题", "questions": [{"q": "要增强区域发展协调性,促进区域联动发展。", "ans": true, "analysis": "涵盖区域规划、城镇化及海洋强国战略。"}, {"q": "推动公共安全治理模式向事中处置转型。", "ans": false, "analysis": "错。应为向“事前预防”转型。"}, {"q": "巩固国防和强大军队是中国式现代化的战略支撑。", "ans": true, "analysis": "强国必须强军。"}, {"q": "坚持和加强党的全面领导是推进中国式现代化的根本保证。", "ans": true, "analysis": "党的领导关系最终成败。"}, {"q": "发挥党和国家功勋荣誉表彰的精神引领作用。", "ans": true, "analysis": "功勋荣誉表彰是培育时代新风貌的重要抓手。"}, {"q": "社会保障能力是人民生活的安全网和社会运行的稳定器。", "ans": false, "analysis": "错。应为社会保障“体系”。"}, {"q": "人民健康是民族昌盛和国家强盛的重要标志。", "ans": true, "analysis": "把保障人民健康放在优先发展的战略位置。"}, {"q": "必须牢固树立和践行绿水青山就是金山银山的理念。", "ans": true, "analysis": "生态文明建设的核心理念。"}, {"q": "完善按要素分配政策制度,多渠道增加城乡居民财产性收入。", "ans": true, "analysis": "深化分配制度改革。"}, {"q": "实现碳达峰碳中和是一场广泛而深刻的经济社会系统性变革。", "ans": true, "analysis": "双碳目标是经济发展方式的根本转变。"}, {"q": "国家安全是民族复兴的根基,社会稳定是国家强盛的前提。", "ans": true, "analysis": "统筹发展与安全。"}, {"q": "必须坚定不移贯彻整体国家安全观。", "ans": false, "analysis": "错。是“总体”国家安全观。"}, {"q": "完善以宪法为核心的中国特色社会主义法律体系。", "ans": true, "analysis": "宪法是国家的根本法。"}, {"q": "要提高防灾减灾救灾和重大突发公共事件处置保障能力。", "ans": true, "analysis": "完善国家应急管理体系。"}, {"q": "加快推进县域社会治理现代化,提高市域社会治理能力。", "ans": false, "analysis": "错。应为“市域”社会治理现代化。"}, {"q": "中国为维护世界和平和地区稳定发挥决定性作用。", "ans": false, "analysis": "错。中国发挥的是“建设性”作用。"}, {"q": "健全贯彻军委主席负责制体制机制。", "ans": true, "analysis": "党对军队绝对领导的最高实现形式。"}, {"q": "开展“学习强军思想、建功强军事业”教育实践活动。", "ans": true, "analysis": "新时代强军铸魂的重要举措。"}, {"q": "加强军人军属荣誉激励和权益保障。", "ans": true, "analysis": "让军人成为全社会尊崇的职业。"}, {"q": "世界之变、时代之变、历史之变正以前所未有的方式展开。", "ans": true, "analysis": "百年未有之大变局。"}, {"q": "保持香港、澳门社会主义制度和生活方式长期不变。", "ans": false, "analysis": "错。港澳保持“资本主义”制度和生活方式长期不变。"}, {"q": "和平、发展、合作、共赢的历史潮流不可阻挡。", "ans": true, "analysis": "乐观与自信。"}, {"q": "推动构建和平共处、总体稳定、优先发展的大国关系格局。", "ans": false, "analysis": "错。原文是“均衡发展”的大国关系格局。"}, {"q": "坚持亲诚惠容和与邻为善、以邻为伴周边外交方针。", "ans": true, "analysis": "周边外交基本方针。"}, {"q": "党的最高领导机关是党的全国代表大会。", "ans": false, "analysis": "错。最高领导机关是全国代表大会“和它所产生的中央委员会”。"}, {"q": "党的全国代表大会每五年举行一次。", "ans": true, "analysis": "党章规定每五年举行一次。"}, {"q": "凡是有正式党员三人以上的基层单位,都应当成立党的基层组织。", "ans": true, "analysis": "基层党组织的基本人数要求。"}, {"q": "党是按照领导负责制组织起来的统一整体。", "ans": false, "analysis": "错。是按照“民主集中制”组织起来。"}, {"q": "党员还有权要求罢免或撤换不称职的干部。", "ans": true, "analysis": "党员的民主监督权利。"}, {"q": "研究制定好“十五五”规划,为如期基本实现社会主义现代化奠定更加坚实的基础。", "ans": true, "analysis": "“十五五”是冲刺2035远景目标的关键五年。"}]}, {"type": "fill", "title": "填空题", "questions": [{"q": "全面准确、坚定不移贯彻“____”的方针，促进香港、澳门长期繁荣稳定。", "ans": "一个国家、两种制度", "analysis": "“一国两制”是解决历史遗留问题的最佳方案。"}, {"q": "必须实行正确的集中,牢固树立____意识、____意识、____意识、____意识。", "ans": "政治、大局、核心、看齐", "analysis": "“四个意识”。"}, {"q": "中国共产党在社会主义初级阶段的基本路线是：为把我国建设成为____的社会主义现代化强国而奋斗。", "ans": "富强民主文明和谐美丽", "analysis": "五位一体总体目标。"}]}]}, {"title": "模拟题（四）", "sections": [{"type": "single", "title": "单选题", "questions": [{"q": "到二○三五年人均国内生产总值达到（　　）水平，基本实现社会主义现代化。", "opts": ["发展中国家前列", "中等发达国家", "发达国家初级"], "ans": 1, "analysis": "达到中等发达国家水平。"}, {"q": "坚持把发展经济的着力点放在（　　）上。", "opts": ["数字经济", "虚拟经济", "实体经济"], "ans": 2, "analysis": "实体经济是立身之本。"}, {"q": "构建以（　　）为骨干的现代化产业体系。", "opts": ["先进制造业", "现代服务业", "数字经济"], "ans": 0, "analysis": "先进制造业是骨干。"}, {"q": "分类推进以（　　）为重要载体的城镇化建设。", "opts": ["超大城市", "乡村", "县城"], "ans": 2, "analysis": "以县城为重要载体的城镇化。"}, {"q": "（　　）是中国式现代化的出发点和落脚点。", "opts": ["实现人民对美好生活的向往", "构建新发展格局", "建设现代化产业体系"], "ans": 0, "analysis": "实现人民对美好生活的向往。"}, {"q": "推动香港进入由乱到治走向（　　）的新阶段。", "opts": ["由治及兴", "由治转稳", "由治到静"], "ans": 0, "analysis": "“由治及兴”的关键时期。"}, {"q": "形成同我国综合国力和国际地位相匹配的（　　）。", "opts": ["文化主导力", "话语主导权", "国际话语权"], "ans": 2, "analysis": "增强国际话语权。"}, {"q": "推动构建（　　）。", "opts": ["战略同盟关系", "新型国际关系", "贸易伙伴关系"], "ans": 1, "analysis": "“新型国际关系”。"}, {"q": "拥有（　　）是我们党坚定信仰信念、把握历史主动的根本所在。", "opts": ["马克思主义科学理论指导", "科学的世界观和方法论", "正确的立场观点方法"], "ans": 0, "analysis": "马克思主义科学理论指导是根本所在。"}, {"q": "取得重大理论创新成果，集中体现为（　　）。", "opts": ["中国特色社会主义理论体系", "中国特色社会主义思想", "新时代中国特色社会主义思想"], "ans": 2, "analysis": "习近平新时代中国特色社会主义思想。"}, {"q": "不断赋予科学理论鲜明的（　　）。", "opts": ["实践特色", "中国特色", "时代特色"], "ans": 1, "analysis": "鲜明的“中国特色”。"}, {"q": "不断谱写（　　）新篇章。", "opts": ["马克思主义中国化时代化", "中华民族伟大复兴", "建设社会主义现代化强国"], "ans": 0, "analysis": "推进马克思主义中国化时代化。"}, {"q": "中国的问题必须从中国（　　）出发。", "opts": ["基本国情", "基本路线", "基本制度"], "ans": 0, "analysis": "认清中国国情。"}, {"q": "（　　）才能不迷失方向、不犯颠覆性错误，（　　）才能把握时代、引领时代。", "opts": ["守正;创新", "创新;守正", "守正;改革"], "ans": 0, "analysis": "“守正创新”。"}, {"q": "坚持把（　　）作为现代化建设的出发点和落脚点。", "opts": ["满足人民群众日益增长的物质文化需要", "实现人民对美好生活的向往", "实现共同富裕"], "ans": 1, "analysis": "实现人民对美好生活的向往。"}, {"q": "党的建设特别是（　　）面临不少顽固性、多发性问题。", "opts": ["党风廉政建设", "“四风”问题", "党风廉政建设和反腐败斗争"], "ans": 2, "analysis": "反腐败斗争形势依然严峻复杂。"}, {"q": "（　　）是全面建设社会主义现代化国家的首要任务。", "opts": ["高速度发展", "高质量发展", "高标准发展"], "ans": 1, "analysis": "高质量发展是首要任务。"}, {"q": "（　　）是党执政兴国的第一要务。", "opts": ["发展", "改革", "稳定"], "ans": 0, "analysis": "发展是第一要务。"}, {"q": "没有坚实的（　　）基础，就不可能全面建成社会主义现代化强国。", "opts": ["物质文化", "物质文明", "物质技术"], "ans": 2, "analysis": "“物质技术”基础。"}, {"q": "增强消费对经济发展的（　　）和投资对优化供给结构的（　　）。", "opts": ["保障性作用;关键作用", "基础性作用;关键作用", "保障性作用;拉动作用"], "ans": 1, "analysis": "基础性作用和关键作用。"}, {"q": "使党始终成为风雨来袭时全体人民最可靠的（　　）。", "opts": ["主心骨", "顶梁柱", "指南针"], "ans": 0, "analysis": "“主心骨”。"}, {"q": "完善中国特色现代企业制度，弘扬（　　）精神。", "opts": ["工匠", "企业家", "主人翁"], "ans": 1, "analysis": "“企业家精神”。"}, {"q": "党按照（　　）的原则选拔干部。", "opts": ["政绩突出", "德才兼备、以德为先", "政治性强"], "ans": 1, "analysis": "“德才兼备、以德为先”。"}, {"q": "坚持（　　），执纪必严、违纪必究。", "opts": ["从严治党", "批评与自我批评", "惩前毖后、治病救人"], "ans": 2, "analysis": "“惩前毖后、治病救人”。"}, {"q": "坚持（　　），统筹发展和安全。", "opts": ["国家安全观", "全面国家安全观", "总体国家安全观"], "ans": 2, "analysis": "“总体”国家安全观。"}, {"q": "培养选拔（　　）的好干部。", "opts": ["政绩突出", "党和人民需要", "群众信任"], "ans": 1, "analysis": "“党和人民需要”。"}, {"q": "党员违反民主集中制原则，（　　）党组织作出的重大决定的，给予警告或者严重警告处分。", "opts": ["严重阻碍", "阳奉阴违", "拒不执行或者擅自改变"], "ans": 2, "analysis": "“拒不执行或者擅自改变”。"}, {"q": "对于受到留党察看处分一年的党员，期满后仍不符合恢复党员权利条件的，应当（　　）。", "opts": ["延长一年留党察看期限", "延长二年留党察看期限", "开除党籍"], "ans": 0, "analysis": "留党察看期限最长不超过两年。"}]}, {"type": "multi", "title": "多选题", "questions": [{"q": "发展具有强大（　　）的新时代中国特色社会主义文化。", "opts": ["思想引领力", "精神凝聚力", "价值感召力", "国际影响力"], "ans": [0, 1, 2, 3], "analysis": "文化强国的建设目标。"}, {"q": "协同推进（　　）。", "opts": ["降碳", "减污", "扩绿", "增长"], "ans": [0, 1, 2, 3], "analysis": "“降碳、减污、扩绿、增长”。"}, {"q": "促进形成更多由（　　）的经济发展模式。", "opts": ["外需依赖", "内需主导", "消费拉动", "内生增长"], "ans": [1, 2, 3], "analysis": "内需主导、消费拉动和内生增长模式。"}, {"q": "强化（　　）和（　　）调节，实施更加积极的宏观政策。", "opts": ["逆周期", "跨周期", "顺周期", "短周期"], "ans": [0, 1], "analysis": "逆周期和跨周期调节。"}, {"q": "督促领导干部特别是高级干部（　　）。", "opts": ["严于律己", "严负其责", "严管所辖", "严于修身"], "ans": [0, 1, 2], "analysis": "严于律己、严负其责、严管所辖。"}, {"q": "深化整治（　　）领域的腐败。", "opts": ["重点行业", "权力集中", "资金密集", "资源富集"], "ans": [1, 2, 3], "analysis": "权力集中、资金密集、资源富集。"}, {"q": "坚持不敢腐、不能腐、不想腐一体推进，（　　）。", "opts": ["同时发力", "同向发力", "综合发力", "协同发力"], "ans": [0, 1, 2], "analysis": "“三不腐”必须同时发力、同向发力、综合发力。"}, {"q": "确保全党在（　　）上同党中央保持高度一致。", "opts": ["政治立场", "政治方向", "政治原则", "政治道路"], "ans": [0, 1, 2, 3], "analysis": "政治立场、方向、原则、道路。"}, {"q": "中国共产党关于正确处理党际关系的原则是（　　）。", "opts": ["独立自主", "完全平等", "互相尊重", "互不干涉内部事务"], "ans": [0, 1, 2, 3], "analysis": "四大基本原则。"}, {"q": "《中国共产党纪律处分条例》规定的六大纪律是（　　）。", "opts": ["政治纪律、组织纪律", "廉洁纪律、群众纪律", "工作纪律、生活纪律", "保密纪律、外事纪律"], "ans": [0, 1, 2], "analysis": "六大纪律不包括保密纪律和外事纪律。"}]}, {"type": "tf", "title": "判断题（选录）", "questions": [{"q": "到2035年基本实现社会主义现代化，人均国内生产总值达到中等发达国家水平。", "ans": true, "analysis": "党的二十届四中全会提出的目标。"}, {"q": "坚持把发展经济的着力点放在数字经济上。", "ans": false, "analysis": "错。着力点应放在“实体经济”上。"}, {"q": "发展是党执政兴国的第一要务，高质量发展是首要任务。", "ans": true, "analysis": "出自党的二十大报告。"}, {"q": "守正才能不迷失方向，创新才能把握时代。", "ans": true, "analysis": "“守正创新”是新时代的鲜明理论品格。"}, {"q": "党按照政绩突出的原则选拔干部。", "ans": false, "analysis": "错。按照“德才兼备、以德为先”的原则。"}, {"q": "坚持“惩前毖后、治病救人”，对党员违纪行为执纪必严、违纪必究。", "ans": true, "analysis": "基本方针，目的在于教育挽救。"}, {"q": "对留党察看处分一年期满仍不符合条件的，直接开除党籍。", "ans": false, "analysis": "错。应延长一年留党察看期限。"}, {"q": "中国共产党在党际关系上，坚持独立自主、完全平等、互相尊重、互不干涉内部事务的原则。", "ans": true, "analysis": "四大基本原则。"}]}]}]</script>
+<script>
+const EXAMS = JSON.parse(document.getElementById('exam-data').textContent);
+let currentExam = 0;
+let currentMode = 'study';
+let testAnswers = {};
+
+function setMode(m){
+  currentMode = m;
+  testAnswers = {};
+  document.body.className = 'mode-' + m;
+  document.getElementById('btnStudy').className = 'mode-btn' + (m==='study'?' active':'');
+  document.getElementById('btnTest').className = 'mode-btn' + (m==='test'?' active':'');
+  renderExam(currentExam);
+}
+function switchExam(idx){
+  currentExam = idx;
+  testAnswers = {};
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.className='tab-btn'+(i===idx?' active':''));
+  renderExam(idx);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function escapeHTML(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+
+function renderExam(idx){
+  const exam = EXAMS[idx];
+  const main = document.getElementById('mainContent');
+  let html = '';
+  exam.sections.forEach((sec, si)=>{
+    html += '<div class="section-header"><div class="section-badge">'+sec.title+'</div></div>';
+    sec.questions.forEach((q, qi)=>{
+      html += renderQuestion(q, sec.type, 's'+si+'_q'+qi, qi);
+    });
+  });
+  html += '<div class="submit-section"><button class="submit-btn" onclick="submitTest()">🏆 查看本套总成绩</button></div>';
+  html += '<div class="score-card" id="scoreCard"></div>';
+  main.innerHTML = html;
+}
+
+function renderQuestion(q, type, key, qi){
+  const letters = ['A','B','C','D'];
+  let inner = '';
+  if(type === 'single'){
+    let opts = '';
+    q.opts.forEach((opt, oi)=>{
+      opts += '<label class="opt-label" id="opt_'+key+'_'+oi+'">'
+        + '<input type="radio" name="'+key+'" value="'+oi+'" onchange="setAnswer(\''+key+'\','+oi+')">'
+        + '<span class="opt-key">'+letters[oi]+'.</span><span>'+escapeHTML(opt)+'</span></label>';
+    });
+    inner = '<div class="options">'+opts+'</div>';
+  } else if(type === 'multi'){
+    let opts = '';
+    q.opts.forEach((opt, oi)=>{
+      opts += '<label class="opt-label" id="opt_'+key+'_'+oi+'">'
+        + '<input type="checkbox" value="'+oi+'" onchange="setMultiAnswer(\''+key+'\','+oi+')">'
+        + '<span class="opt-key">'+letters[oi]+'.</span><span>'+escapeHTML(opt)+'</span></label>';
+    });
+    inner = '<div class="options">'+opts+'</div>';
+  } else if(type === 'tf'){
+    inner = '<div class="tf-options">'
+      + '<button class="tf-btn" id="tf_'+key+'_t" onclick="setTFAnswer(\''+key+'\',true)">✓ 对</button>'
+      + '<button class="tf-btn" id="tf_'+key+'_f" onclick="setTFAnswer(\''+key+'\',false)">✗ 错</button>'
+      + '</div>';
+  } else if(type === 'fill'){
+    inner = '<textarea class="fill-input" id="fill_'+key+'" rows="2" placeholder="请输入答案..." oninput="setFillAnswer(\''+key+'\',this.value)"></textarea>';
+  }
+
+  let ansText = '';
+  if(type === 'single'){
+    ansText = '答案：<strong>'+letters[q.ans]+'</strong>（'+escapeHTML(q.opts[q.ans])+'）';
+  } else if(type === 'multi'){
+    ansText = '答案：<strong>'+q.ans.map(i=>letters[i]).join('、')+'</strong>（'+q.ans.map(i=>escapeHTML(q.opts[i])).join('；')+'）';
+  } else if(type === 'tf'){
+    ansText = '答案：<strong>'+(q.ans?'✓ 对':'✗ 错')+'</strong>';
+  } else {
+    ansText = '答案：'+escapeHTML(q.ans);
+  }
+
+  const answerBox = '<div class="answer-box hidden" id="ans_'+key+'">'
+    + '<div class="answer-label">📋 参考答案</div>'
+    + '<div class="answer-text">'+ansText+'</div>'
+    + (q.analysis ? '<div class="analysis-text">💡 解析：'+escapeHTML(q.analysis)+'</div>' : '')
+    + '</div>';
+
+  // Fill questions need a manual reveal button (other types auto-reveal on click)
+  const revealBtn = (type === 'fill')
+    ? '<button class="toggle-answer-btn fill-toggle" onclick="toggleAnswer(\''+key+'\',this)">👁 查看参考答案</button>'
+    : '';
+
+  return '<div class="q-card" id="card_'+key+'">'
+    + '<div class="q-num">第 '+(qi+1)+' 题</div>'
+    + '<div class="q-text">'+escapeHTML(q.q)+'</div>'
+    + inner + answerBox + revealBtn
+    + '<div id="result_'+key+'"></div></div>';
+}
+
+function setAnswer(key, val){
+  testAnswers[key] = val;
+  if(currentMode === 'test') evaluateNow(key);
+}
+function setMultiAnswer(key, oi){
+  if(!testAnswers[key]) testAnswers[key] = [];
+  const idx = testAnswers[key].indexOf(oi);
+  if(idx === -1) testAnswers[key].push(oi);
+  else testAnswers[key].splice(idx, 1);
+  testAnswers[key].sort();
+  if(currentMode === 'test') evaluateNow(key);
+}
+function setTFAnswer(key, val){
+  testAnswers[key] = val;
+  if(currentMode === 'test'){
+    evaluateNow(key);
+  } else {
+    document.getElementById('tf_'+key+'_t').className = 'tf-btn' + (val===true?' selected-t':'');
+    document.getElementById('tf_'+key+'_f').className = 'tf-btn' + (val===false?' selected-f':'');
+  }
+}
+function setFillAnswer(key, val){ testAnswers[key] = val; }
+
+function toggleAnswer(key, btn){
+  const box = document.getElementById('ans_'+key);
+  if(!box) return;
+  if(box.classList.contains('hidden')){
+    box.classList.remove('hidden');
+    if(btn) btn.textContent = '🙈 隐藏答案';
+  } else {
+    box.classList.add('hidden');
+    if(btn) btn.textContent = '👁 查看参考答案';
+  }
+}
+
+// helper: find section + question from key like 's0_q3'
+function findQ(key){
+  const m = key.match(/^s(\d+)_q(\d+)$/);
+  const sec = EXAMS[currentExam].sections[+m[1]];
+  return { sec: sec, q: sec.questions[+m[2]], type: sec.type };
+}
+
+// Immediate per-question feedback in test mode
+function evaluateNow(key){
+  const info = findQ(key);
+  const q = info.q, type = info.type;
+  const userAns = testAnswers[key];
+  let isCorrect = false;
+  let showFeedback = true;
+
+  if(type === 'single'){
+    isCorrect = userAns === q.ans;
+    q.opts.forEach(function(_, oi){
+      const el = document.getElementById('opt_'+key+'_'+oi);
+      if(!el) return;
+      el.classList.remove('correct','wrong');
+      if(oi === q.ans) el.classList.add('correct');
+      else if(oi === userAns) el.classList.add('wrong');
+      // disable interaction once answered
+      const input = el.querySelector('input');
+      if(input) input.disabled = true;
+      el.style.cursor = 'default';
+    });
+  } else if(type === 'tf'){
+    isCorrect = userAns === q.ans;
+    const t = document.getElementById('tf_'+key+'_t');
+    const f = document.getElementById('tf_'+key+'_f');
+    if(t){ t.className = 'tf-btn' + (q.ans===true?' correct':''); t.disabled = true; }
+    if(f){ f.className = 'tf-btn' + (q.ans===false?' correct':''); f.disabled = true; }
+    if(!isCorrect && userAns !== undefined){
+      const wrongEl = document.getElementById('tf_'+key+'_'+(userAns?'t':'f'));
+      if(wrongEl) wrongEl.className = 'tf-btn wrong-sel';
+    }
+  } else if(type === 'multi'){
+    const ua = (userAns||[]).slice().sort();
+    const ca = q.ans.slice().sort();
+    // mark each option in real-time
+    q.opts.forEach(function(_, oi){
+      const el = document.getElementById('opt_'+key+'_'+oi);
+      if(!el) return;
+      el.classList.remove('correct','wrong');
+      const isSelected = ua.indexOf(oi) !== -1;
+      const isAnswer = ca.indexOf(oi) !== -1;
+      if(isSelected && isAnswer) el.classList.add('correct');
+      else if(isSelected && !isAnswer) el.classList.add('wrong');
+    });
+    const exactMatch = ua.length === ca.length && ua.every(function(v,i){return v===ca[i];});
+    const hasWrongPick = ua.some(function(i){return ca.indexOf(i)===-1;});
+
+    if(exactMatch){
+      // perfect — lock and show
+      isCorrect = true;
+      q.opts.forEach(function(_, oi){
+        const el = document.getElementById('opt_'+key+'_'+oi);
+        if(el){
+          const input = el.querySelector('input');
+          if(input) input.disabled = true;
+          el.style.cursor = 'default';
+        }
+      });
+    } else if(hasWrongPick){
+      // got at least one wrong — show as wrong
+      isCorrect = false;
+    } else {
+      // partial — only correct ones picked, but not all yet
+      showFeedback = false;
+      const ansBox = document.getElementById('ans_'+key);
+      if(ansBox) ansBox.classList.add('hidden');
+      const resultEl = document.getElementById('result_'+key);
+      if(resultEl){
+        resultEl.innerHTML = ua.length === 0 ? '' :
+          '<span style="color:var(--gold);font-size:13px;font-weight:600">⏳ 已选 '+ua.length+'/'+ca.length+' 项，继续选择...</span>';
+      }
+      const card = document.getElementById('card_'+key);
+      if(card) card.classList.remove('answered-correct','answered-wrong');
+      return;
+    }
+  } else {
+    return; // fill: no auto evaluation
+  }
+
+  if(showFeedback){
+    const ansBox = document.getElementById('ans_'+key);
+    if(ansBox) ansBox.classList.remove('hidden');
+    const resultEl = document.getElementById('result_'+key);
+    if(resultEl){
+      resultEl.innerHTML = isCorrect
+        ? '<span class="result-mark" style="color:var(--correct)">✅</span><span style="color:var(--correct);font-size:14px;font-weight:700">回答正确！</span>'
+        : '<span class="result-mark" style="color:var(--wrong)">❌</span><span style="color:var(--wrong);font-size:14px;font-weight:700">回答错误</span>';
+    }
+    const card = document.getElementById('card_'+key);
+    if(card){
+      card.classList.remove('answered-correct','answered-wrong');
+      card.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+    }
+  }
+}
+
+function submitTest(){
+  const exam = EXAMS[currentExam];
+  let correct = 0, nonFillTotal = 0;
+
+  exam.sections.forEach((sec, si)=>{
+    sec.questions.forEach((q, qi)=>{
+      const key = 's'+si+'_q'+qi;
+      const userAns = testAnswers[key];
+      let isCorrect = false;
+
+      if(sec.type === 'single'){
+        nonFillTotal++;
+        isCorrect = (userAns === q.ans);
+        q.opts.forEach((_, oi)=>{
+          const el = document.getElementById('opt_'+key+'_'+oi);
+          if(el){
+            if(oi === q.ans) el.classList.add('correct');
+            else if(oi === userAns && oi !== q.ans) el.classList.add('wrong');
+          }
+        });
+      } else if(sec.type === 'multi'){
+        nonFillTotal++;
+        const ua = (userAns||[]).slice().sort();
+        const ca = q.ans.slice().sort();
+        isCorrect = JSON.stringify(ua) === JSON.stringify(ca);
+        q.opts.forEach((_, oi)=>{
+          const el = document.getElementById('opt_'+key+'_'+oi);
+          if(el){
+            if(q.ans.indexOf(oi) !== -1) el.classList.add('correct');
+            else if((ua||[]).indexOf(oi) !== -1) el.classList.add('wrong');
+          }
+        });
+      } else if(sec.type === 'tf'){
+        nonFillTotal++;
+        isCorrect = (userAns === q.ans);
+        const t = document.getElementById('tf_'+key+'_t');
+        const f = document.getElementById('tf_'+key+'_f');
+        if(t) t.className = 'tf-btn' + (q.ans===true?' correct':'');
+        if(f) f.className = 'tf-btn' + (q.ans===false?' correct':'');
+        if(!isCorrect && userAns !== undefined){
+          const wrongEl = document.getElementById('tf_'+key+'_'+(userAns?'t':'f'));
+          if(wrongEl) wrongEl.className = 'tf-btn wrong-sel';
+        }
+      }
+
+      const ansBox = document.getElementById('ans_'+key);
+      if(ansBox){ ansBox.classList.remove('hidden'); }
+
+      const resultEl = document.getElementById('result_'+key);
+      const card = document.getElementById('card_'+key);
+      if(resultEl){
+        if(sec.type === 'fill'){
+          resultEl.innerHTML = '';
+        } else if(userAns === undefined || (Array.isArray(userAns) && userAns.length === 0)){
+          resultEl.innerHTML = '<span style="color:var(--text-mute);font-size:13px">⚠️ 未作答</span>';
+        } else {
+          resultEl.innerHTML = isCorrect
+            ? '<span class="result-mark" style="color:var(--correct)">✅</span><span style="color:var(--correct);font-size:14px;font-weight:700">回答正确！</span>'
+            : '<span class="result-mark" style="color:var(--wrong)">❌</span><span style="color:var(--wrong);font-size:14px;font-weight:700">回答错误</span>';
+        }
+      }
+      if(card && sec.type !== 'fill' && userAns !== undefined && !(Array.isArray(userAns) && userAns.length === 0)){
+        card.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+      }
+      if(sec.type !== 'fill' && isCorrect) correct++;
+    });
+  });
+
+  const pct = nonFillTotal > 0 ? Math.round(correct/nonFillTotal*100) : 0;
+  const scoreCard = document.getElementById('scoreCard');
+  scoreCard.className = 'score-card show';
+  const emoji = pct>=90?'🏆':pct>=70?'🎉':pct>=60?'📚':'💪';
+  scoreCard.innerHTML = '<div style="font-size:32px;margin-bottom:8px">'+emoji+'</div>'
+    + '<div class="score-num">'+pct+'<span style="font-size:28px">分</span></div>'
+    + '<div class="score-label">答对 '+correct+' 题 / 共 '+nonFillTotal+' 题（客观题）</div>'
+    + '<div class="score-detail">填空题已展示答案，请自行对照</div>'
+    + '<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div>';
+  scoreCard.scrollIntoView({behavior:'smooth'});
+}
+
+renderExam(0);
+</script>
+</body>
+</html>
